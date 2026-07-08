@@ -6,6 +6,12 @@ from matplotlib import pyplot
 
 from .utils import Path, Paths, plot_finish
 
+# Numpy 2 change inf name
+if numpy.lib.NumpyVersion(numpy.__version__) >= '2.0.0b1':
+    inf = numpy.inf
+else:
+    inf = numpy.Inf
+
 
 def inv_resolvent_norm(A, z, method='svd'):
     r'''Compute the reciprocal norm of the resolvent
@@ -272,12 +278,12 @@ class NonnormalAuto(NonnormalPoints):
                     g_demmel1 = kappa = p + r_norm
 
                     # Demmel 2
-                    g_demmel2 = numpy.Inf
+                    g_demmel2 = inf
                     if radii[-1] <= sep_min/(2*kappa):
                         g_demmel2 = p + r_norm**2 * radii[-1]/(0.5*sep_min - p*radii[-1])
 
                     # Michael Karow bound (personal communication)
-                    g_mika = numpy.Inf
+                    g_mika = inf
                     if radii[-1] <= sep_min/(2*kappa):
                         eps_sep = radii[-1]/sep_min
                         g_mika = (p - eps_sep)/(
@@ -322,3 +328,4 @@ class NonnormalAuto(NonnormalPoints):
                     points.append(midpoint + radius*numpy.exp(1j*(rand+arg)))
         points = numpy.concatenate(points)
         super(NonnormalAuto, self).__init__(A, points, **kwargs)
+
