@@ -1,9 +1,11 @@
+from itertools import product
+import numpy
+import pseudopy
+import shapely.geometry as geom
+from shapely.ops import unary_union
 import matplotlib
 matplotlib.use('Agg')
 
-import numpy
-import pseudopy
-from itertools import product
 
 def dict_merge(*dicts):
     items = []
@@ -47,7 +49,7 @@ def test():
         pseudopy.NonnormalPoints: [{'A': A, 'points': points}],
         pseudopy.Normal: [{'A': A}],
         pseudopy.NormalEvals: [{'evals': evals}]
-        }
+    }
 
     # define epsilons
     epsilons = [0.2, 0.7, 1.1]
@@ -57,7 +59,7 @@ def test():
             pseudo = cls(**param)
 
             # test plot
-            #yield run_plot, pseudo, epsilons
+            # yield run_plot, pseudo, epsilons
 
             # test contour_paths
             for epsilon in epsilons:
@@ -76,16 +78,14 @@ def run_contour_paths(pseudo, epsilon, evals):
     paths = pseudo.contour_paths(epsilon)
 
     # check if pseudospectrum is correct by matching the parts of it
-    import shapely.geometry as geom
-    from shapely.ops import cascaded_union
     # create circles
     circles = [geom.Point(numpy.real(lamda), numpy.imag(lamda))
                .buffer(epsilon) for lamda in evals]
-    exact_pseudo = cascaded_union(circles)
+    exact_pseudo = unary_union(circles)
     exact_paths = pseudopy.utils.get_paths(exact_pseudo)
 
     N = len(paths)
-    assert(N == len(exact_paths))
+    assert (N == len(exact_paths))
 
     # create polygons
     polys = [geom.Polygon([(numpy.real(z), numpy.imag(z))
@@ -100,9 +100,9 @@ def run_contour_paths(pseudo, epsilon, evals):
     for (i, j) in product(range(N), range(N)):
         M[i, j] = exact_polys[i].symmetric_difference(polys[j]).area
     for i in range(N):
-        assert(numpy.min(M[i, :]) < 0.1*epsilon)
+        assert (numpy.min(M[i, :]) < 0.1*epsilon)
 
 
 if __name__ == '__main__':
-    import nose
-    nose.main()
+    import nose2
+    nose2.main()
