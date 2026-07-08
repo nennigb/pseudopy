@@ -1,7 +1,7 @@
 import numpy
 from matplotlib import pyplot
 import shapely.geometry as geom
-from shapely.ops import cascaded_union
+from shapely.ops import unary_union
 
 from .utils import get_paths, plot_finish
 
@@ -35,7 +35,7 @@ class NormalEvals(object):
                    .buffer(epsilon) for lamda in self.evals]
 
         # pseudospectrum is union of circles
-        pseudospec = cascaded_union(circles)
+        pseudospec = unary_union(circles)
 
         return get_paths(pseudospec)
 
