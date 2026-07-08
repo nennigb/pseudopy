@@ -13,6 +13,21 @@ else:
     inf = numpy.Inf
 
 
+def contour_to_paths(contours):
+    """Extract the different paths from a contour.
+    """
+    paths = Paths()
+    # New matplotlib version (>3.8) flatten all paths in get_path
+    # the call of to_polygons split the list for each contour
+    for path in contours.get_paths():
+        # But by default to_polygons simplify the path
+        path.should_simplify = False
+        # polygons contains vertices
+        for p in path.to_polygons():
+            paths.append(Path(p[:, 0] + 1j*p[:, 1]))
+    return paths
+
+
 def inv_resolvent_norm(A, z, method='svd'):
     r'''Compute the reciprocal norm of the resolvent
 
@@ -136,11 +151,9 @@ class NonnormalMeshgrid(_Nonnormal):
         ax = figure.gca()
         contours = ax.contour(self.Real, self.Imag, self.Vals,
                               levels=[epsilon])
-        paths = Paths()
-        if len(contours.collections) == 0:
-            return paths
-        for path in contours.collections[0].get_paths():
-            paths.append(Path(path.vertices[:, 0] + 1j*path.vertices[:, 1]))
+        if len(contours.get_paths()) == 0:
+            return Paths()
+        paths = contour_to_paths(contours)
         pyplot.close(figure)
         return paths
 
@@ -160,11 +173,9 @@ class NonnormalTriang(_Nonnormal):
         '''Extract the polygon patches for the provided epsilon'''
         figure = pyplot.figure()
         contours = pyplot.tricontour(self.triang, self.vals, levels=[epsilon])
-        paths = Paths()
-        if len(contours.collections) == 0:
-            return paths
-        for path in contours.collections[0].get_paths():
-            paths.append(Path(path.vertices[:, 0] + 1j*path.vertices[:, 1]))
+        if len(contours.get_paths()) == 0:
+            return Paths()
+        paths = contour_to_paths(contours)
         pyplot.close(figure)
         return paths
 
