@@ -25,16 +25,21 @@ pyplot.show()
 ```
 
 ## Installation
-### Dependencies
-PseudoPy depends on numpy, scipy, matplotlib and shapely. If you are on Debian/Ubuntu, you can install these dependencies with
-```
-sudo apt-get install python-numpy python-scipy python-matplotlib python-shapely
-```
 
-### pip
-```pip install pseudopy```
+To install the package from pypi, run
 
-Note that you may need to add `sudo` if you want to install it system-wide.
+`pip install pseudopy`
+
+It will install all dependencies like numpy, scipy, matplotlib and shapely. **Consider to use virtual environments to ensure better isolation**.
+To have the latest version, you can also use pip to install the package from the sources, available on the repository.
+
+To run the test suite, run
+```
+pip install pseudopy[test]
+python -m pseudopy.tests.test
+```
+The first line will install the extra dependencies required for tests.
+
 
 ## License
 PseudoPy is free software licensed under the [MIT License](http://opensource.org/licenses/mit-license.php).
