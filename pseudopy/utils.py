@@ -1,6 +1,6 @@
 import numpy
 from matplotlib import pyplot
-
+import shapely.geometry as geom
 
 class Path(object):
     def __init__(self, vertices):
@@ -33,11 +33,10 @@ def get_paths(obj):
                 for sub in [polygon.exterior]+list(polygon.interiors)]
 
     paths = Paths()
-    import shapely.geometry as geom
     if isinstance(obj, geom.polygon.Polygon):
         paths += _get_polygon_paths(obj)
     elif isinstance(obj, geom.multipolygon.MultiPolygon):
-        for polygon in obj:
+        for polygon in obj.geoms:
             paths += _get_polygon_paths(polygon)
     return paths
 
