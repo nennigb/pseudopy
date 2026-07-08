@@ -1,5 +1,6 @@
 import numpy
 from matplotlib import pyplot
+import matplotlib.ticker as ticker
 import shapely.geometry as geom
 
 class Path(object):
@@ -46,16 +47,19 @@ def plot_finish(contours, spectrum=None, contour_labels=True, autofit=True):
     if spectrum is not None:
         pyplot.plot(numpy.real(spectrum), numpy.imag(spectrum), 'o')
 
+        
     if autofit:
         vertices = []
-        for collection in contours.collections:
-            for path in collection.get_paths():
-                vertices.append(path.vertices[:, 0] + 1j*path.vertices[:, 1])
+        # After matplotlib 3.8
+        for path in contours.get_paths():
+            vertices.append(path.vertices[:, 0] + 1j*path.vertices[:, 1])
         vertices = numpy.concatenate(vertices)
         pyplot.xlim(numpy.min(vertices.real), numpy.max(vertices.real))
         pyplot.ylim(numpy.min(vertices.imag), numpy.max(vertices.imag))
 
     # plot contour labels?
-    from matplotlib.ticker import LogFormatterMathtext
     if contour_labels:
-        pyplot.clabel(contours, inline=1, fmt=LogFormatterMathtext())
+        fmt = ticker.LogFormatterMathtext()
+        fmt.create_dummy_axis()
+        pyplot.clabel(contours, inline=1, fmt=fmt)        
+
