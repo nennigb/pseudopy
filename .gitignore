@@ -1,5 +1,8 @@
-*.pyc
-.*.swp
-build
-dist
-MANIFEST
+# Byte-code
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+*.egg-info/
+build/
+dist/
