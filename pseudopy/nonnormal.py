@@ -80,7 +80,7 @@ class _Nonnormal(object):
         Stores result in self.vals and points in self.points
         '''
         self.points = points
-        if method == 'lanczosinv':
+        if method == 'lanczos':
             self.vals = []
 
             # algorithm from page 375 of Trefethen/Embree 2005
@@ -134,7 +134,7 @@ class NonnormalMeshgrid(_Nonnormal):
 
         # call super constructor
         super(NonnormalMeshgrid, self).__init__(
-            A, self.Real.flatten() + 1j*self.Imag.flatten())
+            A, self.Real.flatten() + 1j*self.Imag.flatten(), method=method)
         self.Vals = numpy.array(self.vals).reshape((imag_n, real_n))
 
     def plot(self, epsilons, **kwargs):
