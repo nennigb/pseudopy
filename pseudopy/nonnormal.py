@@ -59,10 +59,10 @@ def inv_resolvent_norm(A, z, method='svd'):
             x1 = x[:m]
             x2 = x[m:]
             ret1 = AH.dot(x2) - numpy.conj(z)*x2
-            ret2 = numpy.array(A.dot(x1), dtype=numpy.complex)
+            ret2 = numpy.array(A.dot(x1), dtype=complex)
             ret2[:n] -= z*x1
             return numpy.c_[ret1, ret2]
-        AH_A = LinearOperator(matvec=matvec, dtype=numpy.complex,
+        AH_A = LinearOperator(matvec=matvec, dtype=complex,
                               shape=(m+n, m+n))
 
         evals = eigsh(AH_A, k=2, tol=1e-6, which='SM', maxiter=m+n+1,
@@ -106,7 +106,7 @@ class _Nonnormal(object):
                         trans=2,
                         check_finite=False
                         )
-                MH_M = LinearOperator(matvec=matvec, dtype=numpy.complex,
+                MH_M = LinearOperator(matvec=matvec, dtype=complex,
                                       shape=(n, n))
 
                 evals = eigsh(MH_M, k=1, tol=1e-3, which='LM',
